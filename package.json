@@ -1,0 +1,15 @@
+{
+  "name": "iSightFieldspecParser",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Generates a list of forms and the fields associated with them from an xlsx field spec",
+  "author": "Nick Tierney",
+  "dependencies": {
+    "xlsx": "~0.8.0",
+    "underscore": "~1.8.3"
+  },
+  "scripts": {},
+  "engines": {
+    "node": "0.10.36"
+  }
+}
