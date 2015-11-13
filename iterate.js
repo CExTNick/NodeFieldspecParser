@@ -1,12 +1,16 @@
 var XLSX = require("xlsx");
 var _ = require("underscore");
 
+
+module.exports = _parseWorkbook;
+
 //A list of the default columns needed on a worksheet to parse fields from the rows.
 var standardColumns = [
     "Form",
     "Field Name",
     "System Name",
     "Field Type",
+    "Data Type",
    	"Mandatory For",
    	"Section",
    	"Sub Section"
@@ -17,28 +21,35 @@ var headerCellLimit = {c:20, r:20}
 /**
 * Reads all of the fields from the fieldpec at the given path
 **/
-function _getFieldsFromWorkbook(filePath){
+function _parseWorkbook(args, iterateCallback, done ){
 	//read in spreadsheet
-	var workbook = XLSX.readFile(filePath);
+	var workbook = XLSX.readFile(args.filePath);
 
-	//parse fields from each sheet
-	var allFields = [];
-	_.each(workbook.Sheets, function(worksheet){ allFields = allFields.concat(getFieldsFromWorksheet(worksheet))} )
-	return allFields;
+	var params = {workbook : workbook};
+
+	_.each(workbook.Sheets, function(worksheet){
+		_parseWorksheet(worksheet, params, iterateCallback);
+	});
+
+	if(args.writeFile){
+		XLSX.writeFile(workbook, args.filePath);	
+	}
+
+	done(params);
 }
-/**
-*	Returns a list of fields from a worksheet.
-**/
-function getFieldsFromWorksheet(worksheet) {
+function _parseWorksheet(worksheet, params, iterateCallback){
+
+	//reset current form on new sheets
+	params.currentForm = null;
+	params.worksheet = worksheet;
+	
 	var headerRowAddresses = getHeaderRowAddresses(worksheet);
-	var forms = [];
 
 	//current sheet is valid since it has all of its header columns
 	if(hasAllHeaderColumns(headerRowAddresses)){
 		//parse all of the fields from the current worksheet using the locations of the header columns.
-		forms = parseFieldsFromRows(worksheet, headerRowAddresses);
+		_parseRows(worksheet, headerRowAddresses, params, iterateCallback);
 	}
-	return forms;
 }
 /**
 *	Returns whether or not the map of addresses contains all of the columns needed to map fields.
@@ -49,7 +60,7 @@ function hasAllHeaderColumns(headerRowAddresses){
 /**
 *	Returns a list of fields from the current worksheet.
 **/
-function parseFieldsFromRows(worksheet, headerRowAddresses){
+function _parseRows(worksheet, headerRowAddresses, params, iterateCallback){
 	var fields = [];
 
 	//start parsing from the row after the header row
@@ -57,22 +68,23 @@ function parseFieldsFromRows(worksheet, headerRowAddresses){
 
 	//find the range/dimensions of the current worksheet
 	var range = XLSX.utils.decode_range(worksheet['!ref']);
-	var currentForm;
 
+	params.headerRowAddresses = headerRowAddresses;
 	//start parsing the current worksheet
 	for(var R = startRow; R <= range.e.r; ++R) {
+
+		params.row = R;
+
 		//associate header column names with the values in the current row
 		var rowValues = mapRowValues(worksheet, R, headerRowAddresses);
 
 		//set form from previous row if null or current row if not
-		rowValues["Form"] = currentForm = rowValues["Form"] || currentForm;
+		rowValues["Form"] = params.currentForm = rowValues["Form"] || params.currentForm;
 
-		//add field to list if it has all the requiredFields
-		if(rowValues["Form"] && rowValues["Field Name"]  && rowValues["Field Type"] ){
-			fields.push(rowValues);
-		}
+		params.mappedValues = rowValues;
+
+		iterateCallback(params);
 	}
-	return fields;
 }
 /**
 *	Maps the value of each header to the header column name.
@@ -139,6 +151,3 @@ function cellAddressIsGreater(cell1, cell2){
 	return c1.r > c2.r || (c1.r ==c2.r && c1.c > c2.c);
 }
 
-module.exports = {
-	getFieldsFromWorkbook : _getFieldsFromWorkbook
-}

@@ -5,8 +5,9 @@
   "description": "Generates a list of forms and the fields associated with them from an xlsx field spec",
   "author": "Nick Tierney",
   "dependencies": {
-    "xlsx": "~0.8.0",
-    "underscore": "~1.8.3"
+    "case": "^1.3.0",
+    "underscore": "~1.8.3",
+    "xlsx": "~0.8.0"
   },
   "scripts": {},
   "engines": {
