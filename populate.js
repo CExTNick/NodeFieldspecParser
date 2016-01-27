@@ -1,7 +1,7 @@
 var XLSX = require("xlsx");
 var fsIterate = require("./iterate.js");
 var Case = require("case");
-var _ = require("underscore");
+var _ = require("lodash");
 var config = require("./config.js");
 
 module.exports = processFile;

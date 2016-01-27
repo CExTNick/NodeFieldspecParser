@@ -6,10 +6,8 @@
   "author": "Nick Tierney",
   "dependencies": {
     "case": "^1.3.0",
+    "lodash": "^4.0.1",
     "xlsx": "~0.8.0"
   },
-  "scripts": {},
-  "engines": {
-    "node": "0.10.36"
-  }
+  "scripts": {}
 }

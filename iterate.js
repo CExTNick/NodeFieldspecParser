@@ -1,5 +1,5 @@
 var XLSX = require("xlsx");
-var _ = require("underscore");
+var _ = require("lodash");
 
 
 module.exports = _parseWorkbook;
@@ -90,7 +90,7 @@ function _parseRows(worksheet, headerRowAddresses, params, iterateCallback){
 *	Maps the value of each header to the header column name.
 **/
 function mapRowValues(worksheet, rowIndex, headerRowAddresses){
-	return _.mapObject(headerRowAddresses, function(val, key){
+	return _.mapValues(headerRowAddresses, function(val, key){
 		//get the header cell location and translate to current row
 		var cellDecoded = {c:val.c, r:rowIndex}
 		var cellEncoded = XLSX.utils.encode_cell(cellDecoded);
