@@ -29,6 +29,6 @@ module.exports = {
 		{form : 'case', name: 'userBlacklist'},
 		{form : 'case', name: 'assignmentStatus'},
 		{form : 'case', name: 'declineReason'},
-		{form : 'case', name: 'reassignReason'
+		{form : 'case', name: 'reassignReason'}
 	]
 }

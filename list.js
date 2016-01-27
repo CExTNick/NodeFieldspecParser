@@ -11,6 +11,7 @@ function processFile(filePath, callback){
 function processRow(params){
 	//add field to list if it has all the requiredFields
 	if(params.mappedValues["Form"] && params.mappedValues["Field Name"]  && params.mappedValues["Field Type"] ){
+		
 		if(!params.fields){
 			params.fields = [];
 		}

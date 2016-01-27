@@ -10,7 +10,6 @@ var standardColumns = [
     "Field Name",
     "System Name",
     "Field Type",
-    "Data Type",
    	"Mandatory For",
    	"Section",
    	"Sub Section"
@@ -55,6 +54,7 @@ function _parseWorksheet(worksheet, params, iterateCallback){
 *	Returns whether or not the map of addresses contains all of the columns needed to map fields.
 **/
 function hasAllHeaderColumns(headerRowAddresses){
+	console.log(_.keys(headerRowAddresses));
 	return _.keys(headerRowAddresses).length == standardColumns.length;
 }
 /**

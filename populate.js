@@ -1,7 +1,7 @@
 var XLSX = require("xlsx");
 var fsIterate = require("./iterate.js");
 var Case = require("case");
-var _ = require("lodash");
+var _ = require("underscore");
 var config = require("./config.js");
 
 module.exports = processFile;
@@ -25,7 +25,7 @@ function processRow(params){
 }
 function generateSystemName(params, form, fieldName){
 	var systemName = Case.camel(fieldName);
-	int fieldIndex = "";
+	var fieldIndex = "";
 
 	while(fieldExists(params, form, systemName, fieldIndex)){
 		fieldIndex = fieldIndex ? fieldIndex + 1 : 1;
