@@ -2,13 +2,10 @@ var fsIterate = require("./iterate.js");
 
 module.exports = processFile;
 
-function processFile(filePath){
-	var fields = null;
-
+function processFile(filePath, callback){
 	fsIterate({filePath: filePath}, processRow, function done(params){
-		fields = params.fields;
+		callback(null, params.fields);
 	});
-	return fields;
 }
 
 function processRow(params){
